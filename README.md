@@ -1,6 +1,6 @@
 # IntegerMathUtils.jl
 
-This library adds several functions useful for doing math on integers. Most of these are just GMP wrappers that may have faster implimentations for smaller integer types.
+This library adds several functions useful for doing math on integers. Most of these are GMP wrappers that may have faster implimentations for smaller integer types.
 
 **Functions**
 
