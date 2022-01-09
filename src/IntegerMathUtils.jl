@@ -1,6 +1,5 @@
-export iroot, ispower, rootrem find_exponent, is_probably_prime
-
 module IntegerMathUtils
+export iroot, ispower, rootrem, find_exponent, is_probably_prime
 
 iroot(x::Integer, n::Integer) = iroot(x, Cint(n))
 
