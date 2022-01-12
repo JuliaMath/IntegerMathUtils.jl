@@ -42,7 +42,7 @@ function find_exponent(x::Integer)
     1
 end
 
-function is_probably_prime(x::Integer; reps=25)
+function is_probably_prime(x::Integer, reps=25)
     return ccall((:__gmpz_probab_prime_p, :libgmp), Cint, (Ref{BigInt}, Cint), x, reps) != 0
 end
 
