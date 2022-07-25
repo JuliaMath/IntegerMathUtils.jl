@@ -46,4 +46,44 @@ function is_probably_prime(x::Integer; reps=25)
     return ccall((:__gmpz_probab_prime_p, :libgmp), Cint, (Ref{BigInt}, Cint), x, reps) != 0
 end
 
+struct Montgomery{T<:Integer}
+    n::T
+    nr::T
+end
+function Montgomery(n::T) where T
+    nr = one(T)
+    num_iters = trailing_zeros(8*sizeof(T))
+    for i in 1:num_iters
+        nr *= 2 - n * nr
+    end
+    return Montgomery{T}(n, nr)
+end
+function montgomify(M::Montgomery{T}, x::T) where T
+    shift = 8*sizeof(T)
+    return T((widen(x) << shift) % M.n)
+end
+# returns a number in the [0, 2 * n - 2] range
+function montgomery_reduce(M::Montgomery{T}, x) where T
+    shift = 8*sizeof(T)
+    q = (x%T) * M.nr
+    m = widemul(q, M.n) >> shift
+    return ((x >> shift) + M.n - m) % T
+end
+function montgomery_mul(M::Montgomery{T}, x::T, y::T) where T
+    return montgomery_reduce(M, widemul(x, y))
+end
+function Base.powermod(a::T, p::T, M::Montgomery{T}) where T
+    a = montgomify(M, a)
+    r = montgomify(M,one(T))
+    while p != 0
+        if p&1 != 0
+            r = montgomery_mul(M, r, a)
+        end
+        a = montgomery_mul(M, a, a)
+        p >>= 1
+    end
+    ans = montgomery_reduce(M, r)
+    return ans < M.n ? ans : ans - M.n
+end
+
 end
