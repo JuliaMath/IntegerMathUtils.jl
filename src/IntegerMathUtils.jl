@@ -43,7 +43,7 @@ function find_exponent(x::Integer)
 end
 
 function is_probably_prime(x::Integer; reps=25)
-    if ! x isa BigInt
+    if !(x isa BigInt)
         x = BigInt(x)
     end
     return 0 != @ccall :libgmp.__gmpz_probab_prime_p(x::Ref{BigInt}, reps::Cint)::Cint
@@ -59,8 +59,8 @@ function kronecker(a, n)
     @assert n != -n || n == 0
     @assert a != -a || a == 0
     t = 1
-    if iszero(n) && abs(a) != 1
-        return 0
+    if iszero(n)
+        return Int(abs(a) == 1)
     end
     if n < 0
         n = abs(n)
