@@ -62,3 +62,9 @@ end
     @test is_probably_prime(big(2)^128-1) == false
 end
 
+@testset "kroneker" begin
+    @test kronecker(4, 5) == kronecker(4, -5) == 1
+    @test kronecker(1, 0) == kronecker(-1, 0) == 1
+    @test kronecker(-4, -5) == -1
+    @test kronecker(4, 6) == kronecker(-4, 0) == 0
+end
