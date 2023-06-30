@@ -9,7 +9,7 @@ on:
     tags:
   push:
     branches:
-      - master
+      - main
     paths-ignore:
       - 'LICENSE'
       - 'README.md'
