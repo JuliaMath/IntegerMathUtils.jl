@@ -75,5 +75,9 @@ jobs:
       - uses: codecov/codecov-action@v4
         with:
           file: lcov.info
+          # For `v4` of `codecov/codecov-action`,
+          # if the repo is public, the following rules apply:
+          # 1. If the PR is from a fork, then no Codecov token is required.
+          # 2. If the PR is NOT from a fork, then the Codecov token is required.
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
