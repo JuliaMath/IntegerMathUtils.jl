@@ -79,5 +79,5 @@ jobs:
           # if the repo is public, the following rules apply:
           # 1. If the PR is from a fork, then no Codecov token is required.
           # 2. If the PR is NOT from a fork, then the Codecov token is required.
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN_ORGWIDE }}
           fail_ci_if_error: true
