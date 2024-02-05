@@ -66,8 +66,10 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
-      # Debugging:
-      - run: find . -type f -name 'lcov.info'
+      - name: (debug) find all lcov.info files
+        run: find . -type f -name 'lcov.info'
+      - name: (debug) cat all lcov.info files
+        run: find . -type f -name 'lcov.info' -exec cat {} \;
       - uses: codecov/codecov-action@v4
         with:
           file: lcov.info
