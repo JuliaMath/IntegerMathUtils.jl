@@ -66,6 +66,18 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
+      - name: (debug) find all lcov.info files
+        run: find . -type f -name 'lcov.info'
+        if: runner.os != 'Windows'
+      # - name: (debug) cat all lcov.info files
+      #   run: find . -type f -name 'lcov.info' -exec cat {} \;
+      #   if: runner.os != 'Windows'
       - uses: codecov/codecov-action@v4
         with:
           file: lcov.info
+          # For `v4` of `codecov/codecov-action`,
+          # if the repo is public, the following rules apply:
+          # 1. If the PR is from a fork, then no Codecov token is required.
+          # 2. If the PR is NOT from a fork, then the Codecov token is required.
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
