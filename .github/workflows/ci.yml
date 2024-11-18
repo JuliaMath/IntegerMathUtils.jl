@@ -72,7 +72,7 @@ jobs:
       # - name: (debug) cat all lcov.info files
       #   run: find . -type f -name 'lcov.info' -exec cat {} \;
       #   if: runner.os != 'Windows'
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           file: lcov.info
           # For `v4` of `codecov/codecov-action`,
