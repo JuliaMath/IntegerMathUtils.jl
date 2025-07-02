@@ -8,7 +8,7 @@ iroot(x::T, n::Cint) where {T<:Integer} = T(iroot(big(x), Cint(n)))
 
 function iroot(x::BigInt, n::Cint)
     n <= 0 && throw(DomainError(n, "Exponent must be > 0"))
-    x <= 0 && iseven(x) && throw(DomainError(n, "This is a math no-no"))
+    x <= 0 && iseven(n) && throw(DomainError(n, "This is a math no-no"))
     ans = BigInt()
     @ccall :libgmp.__gmpz_root(ans::Ref{BigInt}, x::Ref{BigInt}, n::Cint)::Cint
     ans

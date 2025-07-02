@@ -11,6 +11,8 @@ using Test, IntegerMathUtils
         @test iroot(T(10000), 4) == T(10)
         @test iroot(T(10001), 4) == T(10)
         @test iroot(T(9999),  4) == T(9)
+        @test iroot(T(-8), 3) == T(-2)
+        @test_throws DomainError iroot(T(-8), 4)
     end
     @test iroot(big(23)^50, 50)     == big(23)
     @test iroot(big(23)^50 + 1, 50) == big(23)
