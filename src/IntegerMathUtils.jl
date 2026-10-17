@@ -3,6 +3,9 @@ export iroot, ispower, rootrem, find_exponent, is_probably_prime, kronecker
 
 using Base: uabs, BitUnsigned64
 
+# `Base.GMP.libgmp` was added in Julia 1.9
+const libgmp = isdefined(Base.GMP, :libgmp) ? Base.GMP.libgmp : :libgmp
+
 @static if isdefined(Base, :top_set_bit)
     using Base: top_set_bit
 else
@@ -14,7 +17,7 @@ function iroot(x::BigInt, n::Integer)
     n <= 0 && throw(DomainError(n, "Exponent must be > 0"))
     x < 0 && iseven(n) && throw(DomainError(x, "Even roots require x >= 0"))
     ans = BigInt()
-    @ccall :libgmp.__gmpz_root(ans::Ref{BigInt}, x::Ref{BigInt}, n::Culong)::Cint
+    @ccall libgmp.__gmpz_root(ans::Ref{BigInt}, x::Ref{BigInt}, n::Culong)::Cint
     ans
 end
 
@@ -23,12 +26,12 @@ function rootrem(x::BigInt, n::Integer)
     x < 0 && iseven(n) && throw(DomainError(x, "Even roots require x >= 0"))
     root = BigInt()
     rem  = BigInt()
-    @ccall :libgmp.__gmpz_rootrem(root::Ref{BigInt}, rem::Ref{BigInt}, x::Ref{BigInt}, n::Culong)::Cvoid
+    @ccall libgmp.__gmpz_rootrem(root::Ref{BigInt}, rem::Ref{BigInt}, x::Ref{BigInt}, n::Culong)::Cvoid
     return (root, rem)
 end
 
 function ispower(x::BigInt)
-    return 0 != @ccall :libgmp.__gmpz_perfect_power_p(x::Ref{BigInt})::Cint
+    return 0 != @ccall libgmp.__gmpz_perfect_power_p(x::Ref{BigInt})::Cint
 end
 
 # a^n in T via power-by-squaring, detecting overflow. Returns (value, overflowed)
@@ -182,14 +185,14 @@ function is_probably_prime(x::Integer; reps=25)
     if !(x isa BigInt)
         x = BigInt(x)
     end
-    return 0 != @ccall :libgmp.__gmpz_probab_prime_p(x::Ref{BigInt}, reps::Cint)::Cint
+    return 0 != @ccall libgmp.__gmpz_probab_prime_p(x::Ref{BigInt}, reps::Cint)::Cint
 end
 
 function kronecker(a::BigInt, b::Clong)
-    return @ccall :libgmp.__gmpz_kronecker_si(a::Ref{BigInt}, b::Clong)::Cint
+    return @ccall libgmp.__gmpz_kronecker_si(a::Ref{BigInt}, b::Clong)::Cint
 end
 function kronecker(a::Clong, b::BigInt)
-    return @ccall :libgmp.__gmpz_si_kronecker(a::Clong, b::Ref{BigInt})::Cint
+    return @ccall libgmp.__gmpz_si_kronecker(a::Clong, b::Ref{BigInt})::Cint
 end
 function kronecker(a, n)
     @assert n != -n || n == 0
